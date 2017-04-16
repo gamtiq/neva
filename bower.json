@@ -1,0 +1,50 @@
+{
+  "name": "neva",
+  "main": [
+    "dist/neva.js", 
+    "dist/neva.min.js"
+  ],
+  "version": "0.1.0",
+  "homepage": "https://github.com/gamtiq/neva",
+  "authors": [
+    "Denis Sikuler"
+  ],
+  "description": "Simple library to work with custom events.",
+  "keywords": [
+    "event",
+    "events",
+    "emit",
+    "emitter",
+    "eventemitter",
+    "event-emitter",
+    "pubsub",
+    "pub-sub",
+    "pub/sub",
+    "publish",
+    "subscribe",
+    "subscriber",
+    "subscription",
+    "fire",
+    "listen",
+    "listener",
+    "handle",
+    "handler",
+    "handling",
+    "processing",
+    "eventbus",
+    "event-bus",
+    "dispatch",
+    "dispatcher",
+    "delegate",
+    "delegation",
+    "custom"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

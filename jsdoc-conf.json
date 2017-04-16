@@ -1,0 +1,17 @@
+{
+    "plugins": ["plugins/markdown"],
+
+    "markdown": {
+        "parser": "marked"
+    },
+    
+    "templates": {
+        "default": {
+            "outputSourceFiles": true
+        },
+        "systemName": "neva",
+        "copyright": "Copyright (c) 2017 Denis Sikuler",
+        "theme": "spacelab",
+        "linenums": true
+    }
+}

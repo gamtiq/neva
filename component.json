@@ -1,0 +1,42 @@
+{
+  "name": "neva",
+  "repository": "gamtiq/neva",
+  "description": "Simple library to work with custom events.",
+  "version": "0.1.0",
+  "keywords": [
+    "event",
+    "events",
+    "emit",
+    "emitter",
+    "eventemitter",
+    "event-emitter",
+    "pubsub",
+    "pub-sub",
+    "pub/sub",
+    "publish",
+    "subscribe",
+    "subscriber",
+    "subscription",
+    "fire",
+    "listen",
+    "listener",
+    "handle",
+    "handler",
+    "handling",
+    "processing",
+    "eventbus",
+    "event-bus",
+    "dispatch",
+    "dispatcher",
+    "delegate",
+    "delegation",
+    "custom"
+  ],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "dist/neva.js",
+  "scripts": [
+    "dist/neva.js"
+  ]
+}
