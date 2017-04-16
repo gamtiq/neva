@@ -14,6 +14,8 @@
   "bugs": {
     "url": "https://github.com/gamtiq/neva/issues"
   },
+  "jsnext:main": "src/neva.js",
+  "module": "src/neva.js",
   "main": "dist/neva.common.js",
   "engines": {
     "node": ">= 0.12.0"
