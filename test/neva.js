@@ -442,6 +442,33 @@ describe('neva', function nevaTestSuite() {
                 check([null, 93], 7);
             });
             
+            it('should pass given event object to handlers', () => {
+                const obj = getEmitter();
+                const eventType = 'eventObjTest';
+                const eventObj = {
+                    type: eventType,
+                    payload: 12,
+                    value: 'abc',
+                    sign: false
+                };
+                let passedEvent = null;
+                let payload = null;
+
+                obj.on(eventType, (event) => {
+                    passedEvent = event;
+                });
+                obj.on(eventType, (event) => {
+                    payload = event.payload;
+                });
+
+                obj.emit(eventObj);
+
+                expect( passedEvent )
+                    .equal( eventObj );
+                expect( payload )
+                    .equal( eventObj.payload );
+            });
+            
             it('should call handlers in definite order', () => {
                 const obj = getEmitter();
                 const eventType = 'test-order';
