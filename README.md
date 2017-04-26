@@ -94,7 +94,7 @@ emitter.on(['event1', 'event2'], eventHandler)
         .on('event1', obj.handler, obj);
 
 emitter.emit('event1', 1, 2, 3)
-        .emit('event2', 'some data');
+        .emit({type: 'event2', data: 'some data', qty: 8});
 // The following will be printed into console:
 // eventHandler: event type - event1 , data - 1
 // obj.handler: event type - event1 , params - Array [ 1, 2, 3 ]
@@ -154,6 +154,10 @@ An object with the following fields will be passed in each handler:
 * `type: string` - the event type (value of `type` parameter).
 * `params: Array` - list of additional parameters that are passed besides the event type (`[param1, param2, ...]`).
 * `data: any` - value of the second function's parameter (value of `params[0]`).
+
+#### emit({type: string, ...}): EventEmitter
+
+Call all handlers for the specified event type and pass the given object in each handler.
 
 #### hasEventHandler(type: string, handler: Function, [context: Object]): boolean
 

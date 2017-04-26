@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>neva Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">neva</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-neva.html">neva</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="mixins.list.html" class="dropdown-toggle" data-toggle="dropdown">Mixins<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="EventEmitterMixin.html">EventEmitterMixin</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h1>neva <a name="start"></a></h1><p>Simple library to work with custom events.</p>
+<p><a href="http://badge.fury.io/js/neva"><img src="https://badge.fury.io/js/neva.png" alt="NPM version"></a>
+<a href="http://gruntjs.com/"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a></p>
+<ul>
+<li>Simple event emitter API: <code>on</code>, <code>off</code>, <code>emit</code>, <code>hasEventHandler</code>.</li>
+<li>Event emitter API is chainable.</li>
+<li>Events can be emitted with multiple attached parameters.</li>
+<li>Data about emitted event are wrapped into an object with uniform structure that is passed to handlers.</li>
+<li>Ability to enhance prototype of constructor function (class) with event emitter API (emitter methods can be mixed in <code>prototype</code>).</li>
+<li>Available as ECMAScript 6/2015 module, CommonJS module or UMD.</li>
+<li>Work in any ECMAScript 3+ environment (browsers, Node.js etc).</li>
+<li>Small.</li>
+</ul>
+<h2>Table of contents</h2><ul>
+<li><a href="#install">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#api">API</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+<h2>Installation <a name="install"></a> <a href="#start">&#x2191;</a></h2><h3>Node</h3><pre class="prettyprint source"><code>npm install neva</code></pre><h3><a href="http://bower.io">Bower</a></h3><pre class="prettyprint source"><code>bower install neva</code></pre><h3>AMD, &lt;script&gt;</h3><p>Use <code>dist/neva.js</code> or <code>dist/neva.min.js</code> (minified version).</p>
+<h2>Usage <a name="usage"></a> <a href="#start">&#x2191;</a></h2><h3>ECMAScript 6</h3><pre class="prettyprint source lang-js"><code>import getEmitter from 'neva';</code></pre><h3>Node</h3><pre class="prettyprint source lang-js"><code>const getEmitter = require('neva').getEmitter;</code></pre><h3><a href="http://duojs.org">Duo</a></h3><pre class="prettyprint source lang-js"><code>const getEmitter = require('gamtiq/neva').getEmitter;</code></pre><h3>AMD</h3><pre class="prettyprint source lang-js"><code>define(['path/to/dist/neva.js'], function(neva) {
+    const getEmitter = neva.getEmitter;
+});</code></pre><h3>Bower, &lt;script&gt;</h3><pre class="prettyprint source lang-html"><code>&lt;!-- Use bower_components/neva/dist/neva.js if the library was installed by Bower -->
+&lt;script type=&quot;text/javascript&quot; src=&quot;path/to/dist/neva.js&quot;>&lt;/script>
+&lt;script type=&quot;text/javascript&quot;>
+    // neva is available via neva field of window object
+    const getEmitter = neva.getEmitter;
+&lt;/script></code></pre><h3>Examples <a name="examples"></a> <a href="#start">&#x2191;</a></h3><pre class="prettyprint source lang-js"><code>const emitter = getEmitter();
+const eventHandler = (event) => {
+    console.log('eventHandler: event type -', event.type, ', data -', event.data);
+};
+const obj = {
+    name: 'obj',
+    handler(event) {
+        console.log(`${this.name}.handler: event type -`, event.type, ', params -', event.params);
+    }
+};
+
+emitter.on(['event1', 'event2'], eventHandler)
+        .on('event1', obj.handler, obj);
+
+emitter.emit('event1', 1, 2, 3)
+        .emit({type: 'event2', data: 'some data', qty: 8});
+// The following will be printed into console:
+// eventHandler: event type - event1 , data - 1
+// obj.handler: event type - event1 , params - Array [ 1, 2, 3 ]
+// eventHandler: event type - event2 , data - some data
+
+emitter.hasEventHandler('event1', eventHandler); // true
+
+emitter.off('event1', eventHandler);
+emitter.hasEventHandler('event1', eventHandler); // false
+emitter.hasEventHandler('event1'); // true
+
+emitter.off('event1');
+emitter.hasEventHandler('event1'); // false
+emitter.hasEventHandler(); // true
+
+emitter.off();
+emitter.hasEventHandler(); // false
+
+class SomeClass {
+    ...
+}
+// Add event emitter methods to class
+getEmitter(SomeClass.prototype);</code></pre><h2>API <a name="api"></a> <a href="#start">&#x2191;</a></h2><h3>getEmitter([target: Object]): EventEmitter</h3><p>Create event emitter or add methods to work with events into specified object.</p>
+<p><code>target</code> can be prototype of some constructor function (class).</p>
+<h3>EventEmitter API</h3><h4>on(type: string | string[], handler: Function, [context: Object]): EventEmitter</h4><p>Register a handler for the specified event type(s).</p>
+<h4>off(type: string, handler: Function, [context: Object]): EventEmitter</h4><p>Remove the specified event handler.</p>
+<h4>off(type: string): EventEmitter</h4><p>Remove all handlers for the given event type.</p>
+<h4>off(): EventEmitter</h4><p>Remove all registered event handlers.</p>
+<h4>emit(type: string, [param1: any, param2: any, ...]): EventEmitter</h4><p>Call all handlers for the specified event type.</p>
+<p>An object with the following fields will be passed in each handler:</p>
+<ul>
+<li><code>type: string</code> - the event type (value of <code>type</code> parameter).</li>
+<li><code>params: Array</code> - list of additional parameters that are passed besides the event type (<code>[param1, param2, ...]</code>).</li>
+<li><code>data: any</code> - value of the second function's parameter (value of <code>params[0]</code>).</li>
+</ul>
+<h4>emit({type: string, ...}): EventEmitter</h4><p>Call all handlers for the specified event type and pass the given object in each handler.</p>
+<h4>hasEventHandler(type: string, handler: Function, [context: Object]): boolean</h4><p>Check whether the specified event handler is registered.</p>
+<h4>hasEventHandler(type: string): boolean</h4><p>Check whether any handler for the specified event type is registered.</p>
+<h4>hasEventHandler(): boolean</h4><p>Check whether any event handler is registered.</p>
+<h2>Contributing <a name="contributing"></a> <a href="#start">&#x2191;</a></h2><p>In lieu of a formal styleguide, take care to maintain the existing coding style.
+Add unit tests for any new or changed functionality.
+Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
+<h2>License <a name="license"></a> <a href="#start">&#x2191;</a></h2><p>Copyright (c) 2017 Denis Sikuler<br>Licensed under the MIT license.</p></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright (c) 2017 Denis Sikuler
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on 2017-04-26T23:52:48+03:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

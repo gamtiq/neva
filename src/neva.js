@@ -70,14 +70,14 @@ function getHandlerIndex(emitter, type, handler, context) {   // eslint-disable-
 /**
  * API for events handling.
  *
- * @mixin EventEmitterMixin
+ * @mixin
+ * @alias EventEmitterMixin
  */
 const api = {
     /**
      * Check whether the specified event handler or any event handler is registered.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -94,7 +94,6 @@ const api = {
      * emitter.hasEventHandler('event3');   // false
      *
      * emitter.hasEventHandler();   // true
-     * ```
      *
      * @param {string} [type]
      *      Type (name) of event to check for.
@@ -135,7 +134,6 @@ const api = {
      * Register a handler for the specified event type(s).
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -145,7 +143,6 @@ const api = {
      *      .on('close', obj.handler, obj);
      * ...
      * emitter.on(['event1', 'event2'], eventHandler);
-     * ```
      *
      * @param {string | string[]} type
      *      Type (name) of event or list of types to listen for.
@@ -179,7 +176,6 @@ const api = {
      * Remove the specified event handler or all handlers for given type or for all types.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -194,7 +190,6 @@ const api = {
      * emitter.off('event1');
      * // Remove all handlers for all events
      * emitter.off();
-     * ```
      *
      * @param {string} [type]
      *      Type (name) of event for which to remove handler(s).
@@ -238,16 +233,10 @@ const api = {
     /**
      * Call all handlers for the specified event type.
      *
-     * If value of `type` parameter is an object it will be passed in each handler as is.
-     * If value of `type` parameter is a string an object of {@link EventData} type will be passed in each handler.
-     *
-     * An object with the following fields will be passed in each handler:
-     * - `type: string` - the event type (value of `type` parameter).
-     * - `params: Array` - list of additional parameters that are passed besides the event type.
-     * - `data: any` - value of the second function's parameter (value of `params[0]`).
+     * If value of `type` parameter is an object it will be passed in each handler as is.  
+     * If value of `type` parameter is a string an object of {@link module:neva~EventData EventData} type will be passed in each handler.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter.on('some-event', (event) => {
@@ -258,7 +247,6 @@ const api = {
      *        .emit('another-event');
      * ...
      * emitter.emit({type: 'eventName', value: {a: 5}});
-     * ```
      *
      * @param {Object | string} type
      *      Type (name) of event or event object with `type` field for which to call handlers.

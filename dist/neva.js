@@ -29,7 +29,7 @@
      * @module neva
      */
 
-    var dataField = '__eventMap';
+    var dataField = '__nevaEventMap';
 
     /**
      * Data about emitted event.
@@ -87,7 +87,8 @@
     /**
      * API for events handling.
      *
-     * @mixin EventEmitterMixin
+     * @mixin
+     * @alias EventEmitterMixin
      */
     var api = {
         hasEventHandler: function hasEventHandler(type, handler, context) {
@@ -160,17 +161,30 @@
             }
 
             var eventData = this[dataField];
-            if (eventData && (eventData = eventData[type]) && eventData.length) {
-                var eventObj = {
-                    type: type,
-                    params: params,
-                    data: params[0]
-                };
-                var i = 0;
-                var item = void 0;
-                // eslint-disable-next-line no-cond-assign
-                while (item = eventData[i++]) {
-                    item.handler.call(item.obj, eventObj);
+            if (eventData) {
+                var eventObj = void 0,
+                    eventType = void 0;
+                if (typeof type === 'string') {
+                    eventType = type;
+                } else if (type) {
+                    eventObj = type;
+                    eventType = type.type;
+                }
+                // eslint-disable-next-line eqeqeq, no-eq-null
+                if (eventType != null && (eventData = eventData[eventType]) && eventData.length) {
+                    if (!eventObj) {
+                        eventObj = {
+                            type: type,
+                            params: params,
+                            data: params[0]
+                        };
+                    }
+                    var i = 0;
+                    var item = void 0;
+                    // eslint-disable-next-line no-cond-assign
+                    while (item = eventData[i++]) {
+                        item.handler.call(item.obj, eventObj);
+                    }
                 }
             }
 

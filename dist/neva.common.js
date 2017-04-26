@@ -16,7 +16,7 @@ exports.default = getEmitter;
  * @module neva
  */
 
-var dataField = '__eventMap';
+var dataField = '__nevaEventMap';
 
 /**
  * Data about emitted event.
@@ -74,14 +74,14 @@ function getHandlerIndex(emitter, type, handler, context) {
 /**
  * API for events handling.
  *
- * @mixin EventEmitterMixin
+ * @mixin
+ * @alias EventEmitterMixin
  */
 var api = {
     /**
      * Check whether the specified event handler or any event handler is registered.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -98,7 +98,6 @@ var api = {
      * emitter.hasEventHandler('event3');   // false
      *
      * emitter.hasEventHandler();   // true
-     * ```
      *
      * @param {string} [type]
      *      Type (name) of event to check for.
@@ -139,7 +138,6 @@ var api = {
      * Register a handler for the specified event type(s).
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -149,7 +147,6 @@ var api = {
      *      .on('close', obj.handler, obj);
      * ...
      * emitter.on(['event1', 'event2'], eventHandler);
-     * ```
      *
      * @param {string | string[]} type
      *      Type (name) of event or list of types to listen for.
@@ -182,7 +179,6 @@ var api = {
      * Remove the specified event handler or all handlers for given type or for all types.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter
@@ -197,7 +193,6 @@ var api = {
      * emitter.off('event1');
      * // Remove all handlers for all events
      * emitter.off();
-     * ```
      *
      * @param {string} [type]
      *      Type (name) of event for which to remove handler(s).
@@ -241,15 +236,10 @@ var api = {
     /**
      * Call all handlers for the specified event type.
      *
-     * An object of {@link EventData} type will be passed in each handler.
-     *
-     * An object with the following fields will be passed in each handler:
-     * - `type: string` - the event type (value of `type` parameter).
-     * - `params: Array` - list of additional parameters that are passed besides the event type.
-     * - `data: any` - value of the second function's parameter (value of `params[0]`).
+     * If value of `type` parameter is an object it will be passed in each handler as is.  
+     * If value of `type` parameter is a string an object of {@link module:neva~EventData EventData} type will be passed in each handler.
      *
      * @example
-     * ```js
      * const emitter = getEmitter();
      * ...
      * emitter.on('some-event', (event) => {
@@ -258,12 +248,14 @@ var api = {
      * ...
      * emitter.emit('some-event', 'payload')
      *        .emit('another-event');
-     * ```
+     * ...
+     * emitter.emit({type: 'eventName', value: {a: 5}});
      *
-     * @param {string} type
-     *      Type (name) of event for which to call handlers.
+     * @param {Object | string} type
+     *      Type (name) of event or event object with `type` field for which to call handlers.
      * @param {...any} [params]
      *      Any values that should be available in handlers.
+     *      Will be used only when `type` parameter is string.
      * @return {EventEmitter}
      *      `this`.
      */
@@ -273,17 +265,30 @@ var api = {
         }
 
         var eventData = this[dataField];
-        if (eventData && (eventData = eventData[type]) && eventData.length) {
-            var eventObj = {
-                type: type,
-                params: params,
-                data: params[0]
-            };
-            var i = 0;
-            var item = void 0;
-            // eslint-disable-next-line no-cond-assign
-            while (item = eventData[i++]) {
-                item.handler.call(item.obj, eventObj);
+        if (eventData) {
+            var eventObj = void 0,
+                eventType = void 0;
+            if (typeof type === 'string') {
+                eventType = type;
+            } else if (type) {
+                eventObj = type;
+                eventType = type.type;
+            }
+            // eslint-disable-next-line eqeqeq, no-eq-null
+            if (eventType != null && (eventData = eventData[eventType]) && eventData.length) {
+                if (!eventObj) {
+                    eventObj = {
+                        type: type,
+                        params: params,
+                        data: params[0]
+                    };
+                }
+                var i = 0;
+                var item = void 0;
+                // eslint-disable-next-line no-cond-assign
+                while (item = eventData[i++]) {
+                    item.handler.call(item.obj, eventObj);
+                }
             }
         }
 
