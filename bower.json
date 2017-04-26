@@ -4,7 +4,7 @@
     "dist/neva.js", 
     "dist/neva.min.js"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/gamtiq/neva",
   "authors": [
     "Denis Sikuler"

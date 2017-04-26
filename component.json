@@ -2,7 +2,7 @@
   "name": "neva",
   "repository": "gamtiq/neva",
   "description": "Simple library to work with custom events.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [
     "event",
     "events",
