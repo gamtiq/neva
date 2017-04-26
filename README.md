@@ -3,6 +3,7 @@
 Simple library to work with custom events.
 
 [![NPM version](https://badge.fury.io/js/neva.png)](http://badge.fury.io/js/neva)
+[![Build Status](https://secure.travis-ci.org/gamtiq/neva.png?branch=master)](http://travis-ci.org/gamtiq/neva)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 * Simple event emitter API: `on`, `off`, `emit`, `hasEventHandler`.
