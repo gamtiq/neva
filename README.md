@@ -172,6 +172,8 @@ Check whether any handler for the specified event type is registered.
 
 Check whether any event handler is registered.
 
+See `doc` folder for details.
+
 ## Contributing <a name="contributing"></a> [&#x2191;](#start)
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality.
