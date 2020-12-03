@@ -124,7 +124,7 @@ module.exports = function(grunt) {
         
         mochacli: {
             options: {
-                compilers: ['js:babel-register']
+                require: ['babel-register']
             },
             all: {}
         }

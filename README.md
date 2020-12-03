@@ -30,7 +30,7 @@ Simple library to work with custom events.
 
     npm install neva
 
-### [Bower](http://bower.io)
+### [Bower](https://bower.io)
 
     bower install neva
 
@@ -50,12 +50,6 @@ import getEmitter from 'neva';
 
 ```js
 const getEmitter = require('neva').getEmitter;
-```
-
-### [Duo](http://duojs.org)
-
-```js
-const getEmitter = require('gamtiq/neva').getEmitter;
 ```
 
 ### AMD
@@ -180,5 +174,5 @@ Add unit tests for any new or changed functionality.
 Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## License <a name="license"></a> [&#x2191;](#start)
-Copyright (c) 2017 Denis Sikuler  
+Copyright (c) 2017-2020 Denis Sikuler  
 Licensed under the MIT license.

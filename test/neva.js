@@ -345,8 +345,8 @@ describe('neva', function nevaTestSuite() {
                     handler(eventData) {
                         const len = eventData.params.length;
                         this.n += len > 0
-                                    ? len
-                                    : 1;
+                            ? len
+                            : 1;
                     }
                 };
 

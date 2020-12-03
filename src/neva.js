@@ -2,7 +2,7 @@
  * neva
  * https://github.com/gamtiq/neva
  *
- * Copyright (c) 2017 Denis Sikuler
+ * Copyright (c) 2017-2020 Denis Sikuler
  * Licensed under the MIT license.
  */
 
@@ -156,8 +156,8 @@ const api = {
     on(type, handler, context) {
         const eventData = this[dataField] || (this[dataField] = {});
         const typeList = typeof type === 'string'
-                            ? [type]
-                            : type;
+            ? [type]
+            : type;
         let i = typeList.length;
         while (i--) {
             const eventType = typeList[i];
