@@ -140,7 +140,7 @@ module.exports = function(grunt) {
     
     // Tasks
 
-    grunt.registerTask('nojekyll', 'Create .nojekyll file in docs directory', function() {
+    grunt.registerTask('nojekyll', 'Create .nojekyll file in docs directory', function nojekyll() {
         makef.createFile('.nojekyll', {dir: path.join(gruntFileDir, docDir)});
     });
 
