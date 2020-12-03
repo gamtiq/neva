@@ -6,8 +6,12 @@
 // eslint-disable-next-line func-names
 module.exports = function(grunt) {
     
+    var path = require('path');
+    var makef = require('makef');
     var matchdep = require('matchdep');
-    
+
+    var gruntFileDir = process.cwd();
+    var docDir = 'docs';
     
     // Configuration
     grunt.initConfig({
@@ -44,7 +48,7 @@ module.exports = function(grunt) {
             dist: {
                 src: ['<%= src %>', 'README.md'],
                 options: {
-                    destination: 'doc',
+                    destination: docDir,
                     template: 'node_modules/ink-docstrap/template',
                     configure: 'jsdoc-conf.json'
                 }
@@ -135,8 +139,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('gruntify-eslint');
     
     // Tasks
+
+    grunt.registerTask('nojekyll', 'Create .nojekyll file in docs directory', function() {
+        makef.createFile('.nojekyll', {dir: path.join(gruntFileDir, docDir)});
+    });
+
     grunt.registerTask('build', ['clean', 'babel', 'uglify']);
-    grunt.registerTask('doc', ['jsdoc']);
+    grunt.registerTask('doc', ['jsdoc', 'nojekyll']);
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('test', ['mochacli']);
     grunt.registerTask('default', ['lint', 'test']);
