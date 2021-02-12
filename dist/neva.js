@@ -19,7 +19,7 @@
      * neva
      * https://github.com/gamtiq/neva
      *
-     * Copyright (c) 2017 Denis Sikuler
+     * Copyright (c) 2017-2021 Denis Sikuler
      * Licensed under the MIT license.
      */
 
@@ -49,6 +49,15 @@
      *
      * @typedef {Object} EventEmitter
      * @mixes EventEmitterMixin
+     */
+
+    /**
+     * Event handler settings.
+     *
+     * @typedef {Object} HandlerSettings
+     *
+     * @property {boolean} [once=false]
+     *      Whether event handler should be called just once.
      */
 
     /**
@@ -113,7 +122,8 @@
 
             return false;
         },
-        on: function on(type, handler, context) {
+        on: function on(type, handler, context, settings) {
+            // eslint-disable-line max-params
             var eventData = this[dataField] || (this[dataField] = {});
             var typeList = typeof type === 'string' ? [type] : type;
             var i = typeList.length;
@@ -122,7 +132,8 @@
                 if (!this.hasEventHandler(eventType, handler, context)) {
                     (eventData[eventType] || (eventData[eventType] = [])).push({
                         handler: handler,
-                        obj: context || null
+                        obj: context || null,
+                        settings: settings
                     });
                 }
             }
@@ -179,11 +190,21 @@
                             data: params[0]
                         };
                     }
+                    var removeHandlerList = [];
                     var i = 0;
                     var item = void 0;
+                    var settings = void 0;
                     // eslint-disable-next-line no-cond-assign
                     while (item = eventData[i++]) {
                         item.handler.call(item.obj, eventObj);
+                        if ((settings = item.settings) && settings.once) {
+                            removeHandlerList.push(item);
+                        }
+                    }
+                    i = removeHandlerList.length;
+                    // eslint-disable-next-line no-cond-assign
+                    while (item = removeHandlerList[--i]) {
+                        this.off(eventType, item.handler, item.obj);
                     }
                 }
             }

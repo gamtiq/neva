@@ -10,6 +10,7 @@ Simple library to work with custom events.
 * Event emitter API is chainable.
 * Events can be emitted with multiple attached parameters.
 * Data about emitted event are wrapped into an object with uniform structure that is passed to handlers.
+* Ability to add event handler that should be called just once.
 * Ability to enhance prototype of constructor function (class) with event emitter API (emitter methods can be mixed in `prototype`).
 * Available as ECMAScript 6/2015 module, CommonJS module or UMD.
 * Work in any ECMAScript 3+ environment (browsers, Node.js etc).
@@ -40,7 +41,7 @@ Use `dist/neva.js` or `dist/neva.min.js` (minified version).
 
 ## Usage <a name="usage"></a> [&#x2191;](#start)
 
-### ECMAScript 6
+### ECMAScript 6+
 
 ```js
 import getEmitter from 'neva';
@@ -84,9 +85,13 @@ const obj = {
         console.log(`${this.name}.handler: event type -`, event.type, ', params -', event.params);
     }
 };
+function onceHandler(event) {
+    console.log('onceHandler: event type -', event.type, ', data -', event.data);
+}
 
 emitter.on(['event1', 'event2'], eventHandler)
-        .on('event1', obj.handler, obj);
+        .on('event1', obj.handler, obj)
+        .on('event2', onceHandler, null, {once: true});
 
 emitter.emit('event1', 1, 2, 3)
         .emit({type: 'event2', data: 'some data', qty: 8});
@@ -94,8 +99,10 @@ emitter.emit('event1', 1, 2, 3)
 // eventHandler: event type - event1 , data - 1
 // obj.handler: event type - event1 , params - Array [ 1, 2, 3 ]
 // eventHandler: event type - event2 , data - some data
+// onceHandler: event type - event2 , data - some data
 
 emitter.hasEventHandler('event1', eventHandler); // true
+emitter.hasEventHandler('event2', onceHandler); // false
 
 emitter.off('event1', eventHandler);
 emitter.hasEventHandler('event1', eventHandler); // false
@@ -125,7 +132,7 @@ Create event emitter or add methods to work with events into specified object.
 
 ### EventEmitter API
 
-#### on(type: string | string[], handler: Function, [context: Object]): EventEmitter
+#### on(type: string | string[], handler: Function, [context: Object], [settings: HandlerSettings]): EventEmitter
 
 Register a handler for the specified event type(s).
 
@@ -174,5 +181,5 @@ Add unit tests for any new or changed functionality.
 Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## License <a name="license"></a> [&#x2191;](#start)
-Copyright (c) 2017-2020 Denis Sikuler  
+Copyright (c) 2017-2021 Denis Sikuler  
 Licensed under the MIT license.

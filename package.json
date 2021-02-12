@@ -31,7 +31,7 @@
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
-    "chai": "^4.2.0",
+    "chai": "^4.3.0",
     "eslint-config-guard": "0.4.0",
     "grunt": "^1.3.0",
     "grunt-babel": "^7.0.0",
@@ -41,11 +41,11 @@
     "grunt-jsdoc": "^2.4.1",
     "grunt-mocha-cli": "^7.0.0",
     "gruntify-eslint": "^5.0.0",
-    "husky": "^4.3.0",
+    "husky": "^5.0.9",
     "ink-docstrap": "^1.3.2",
-    "makef": "^1.0.0",
+    "makef": "^1.1.0",
     "matchdep": "^2.0.0",
-    "mocha": "^8.2.1"
+    "mocha": "^8.3.0"
   },
   "keywords": [
     "event",
@@ -74,6 +74,9 @@
     "dispatcher",
     "delegate",
     "delegation",
-    "custom"
+    "custom",
+    "on",
+    "off",
+    "once"
   ]
 }

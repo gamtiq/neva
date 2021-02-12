@@ -102,6 +102,7 @@
 <li>Event emitter API is chainable.</li>
 <li>Events can be emitted with multiple attached parameters.</li>
 <li>Data about emitted event are wrapped into an object with uniform structure that is passed to handlers.</li>
+<li>Ability to add event handler that should be called just once.</li>
 <li>Ability to enhance prototype of constructor function (class) with event emitter API (emitter methods can be mixed in <code>prototype</code>).</li>
 <li>Available as ECMAScript 6/2015 module, CommonJS module or UMD.</li>
 <li>Work in any ECMAScript 3+ environment (browsers, Node.js etc).</li>
@@ -116,7 +117,7 @@
 <li><a href="#license">License</a></li>
 </ul>
 <h2>Installation <a name="install"></a> <a href="#start">&#x2191;</a></h2><h3>Node</h3><pre class="prettyprint source"><code>npm install neva</code></pre><h3><a href="https://bower.io">Bower</a></h3><pre class="prettyprint source"><code>bower install neva</code></pre><h3>AMD, &lt;script&gt;</h3><p>Use <code>dist/neva.js</code> or <code>dist/neva.min.js</code> (minified version).</p>
-<h2>Usage <a name="usage"></a> <a href="#start">&#x2191;</a></h2><h3>ECMAScript 6</h3><pre class="prettyprint source lang-js"><code>import getEmitter from 'neva';</code></pre><h3>Node</h3><pre class="prettyprint source lang-js"><code>const getEmitter = require('neva').getEmitter;</code></pre><h3>AMD</h3><pre class="prettyprint source lang-js"><code>define(['path/to/dist/neva.js'], function(neva) {
+<h2>Usage <a name="usage"></a> <a href="#start">&#x2191;</a></h2><h3>ECMAScript 6+</h3><pre class="prettyprint source lang-js"><code>import getEmitter from 'neva';</code></pre><h3>Node</h3><pre class="prettyprint source lang-js"><code>const getEmitter = require('neva').getEmitter;</code></pre><h3>AMD</h3><pre class="prettyprint source lang-js"><code>define(['path/to/dist/neva.js'], function(neva) {
     const getEmitter = neva.getEmitter;
 });</code></pre><h3>Bower, &lt;script&gt;</h3><pre class="prettyprint source lang-html"><code>&lt;!-- Use bower_components/neva/dist/neva.js if the library was installed by Bower -->
 &lt;script type=&quot;text/javascript&quot; src=&quot;path/to/dist/neva.js&quot;>&lt;/script>
@@ -133,9 +134,13 @@ const obj = {
         console.log(`${this.name}.handler: event type -`, event.type, ', params -', event.params);
     }
 };
+function onceHandler(event) {
+    console.log('onceHandler: event type -', event.type, ', data -', event.data);
+}
 
 emitter.on(['event1', 'event2'], eventHandler)
-        .on('event1', obj.handler, obj);
+        .on('event1', obj.handler, obj)
+        .on('event2', onceHandler, null, {once: true});
 
 emitter.emit('event1', 1, 2, 3)
         .emit({type: 'event2', data: 'some data', qty: 8});
@@ -143,8 +148,10 @@ emitter.emit('event1', 1, 2, 3)
 // eventHandler: event type - event1 , data - 1
 // obj.handler: event type - event1 , params - Array [ 1, 2, 3 ]
 // eventHandler: event type - event2 , data - some data
+// onceHandler: event type - event2 , data - some data
 
 emitter.hasEventHandler('event1', eventHandler); // true
+emitter.hasEventHandler('event2', onceHandler); // false
 
 emitter.off('event1', eventHandler);
 emitter.hasEventHandler('event1', eventHandler); // false
@@ -163,7 +170,7 @@ class SomeClass {
 // Add event emitter methods to class
 getEmitter(SomeClass.prototype);</code></pre><h2>API <a name="api"></a> <a href="#start">&#x2191;</a></h2><h3>getEmitter([target: Object]): EventEmitter</h3><p>Create event emitter or add methods to work with events into specified object.</p>
 <p><code>target</code> can be prototype of some constructor function (class).</p>
-<h3>EventEmitter API</h3><h4>on(type: string | string[], handler: Function, [context: Object]): EventEmitter</h4><p>Register a handler for the specified event type(s).</p>
+<h3>EventEmitter API</h3><h4>on(type: string | string[], handler: Function, [context: Object], [settings: HandlerSettings]): EventEmitter</h4><p>Register a handler for the specified event type(s).</p>
 <h4>off(type: string, handler: Function, [context: Object]): EventEmitter</h4><p>Remove the specified event handler.</p>
 <h4>off(type: string): EventEmitter</h4><p>Remove all handlers for the given event type.</p>
 <h4>off(): EventEmitter</h4><p>Remove all registered event handlers.</p>
@@ -182,7 +189,7 @@ getEmitter(SomeClass.prototype);</code></pre><h2>API <a name="api"></a> <a href=
 <h2>Contributing <a name="contributing"></a> <a href="#start">&#x2191;</a></h2><p>In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality.
 Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
-<h2>License <a name="license"></a> <a href="#start">&#x2191;</a></h2><p>Copyright (c) 2017-2020 Denis Sikuler<br>Licensed under the MIT license.</p></article>
+<h2>License <a name="license"></a> <a href="#start">&#x2191;</a></h2><p>Copyright (c) 2017-2021 Denis Sikuler<br>Licensed under the MIT license.</p></article>
     </section>
 
 
@@ -226,13 +233,13 @@ Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
 
 
 	<span class="copyright">
-	Copyright (c) 2017-2020 Denis Sikuler
+	Copyright (c) 2017-2021 Denis Sikuler
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2020-12-03T15:23:00+03:00
+		on 2021-02-12T15:41:56+03:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

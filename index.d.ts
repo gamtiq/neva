@@ -17,13 +17,16 @@ export interface EventData {
     type: string;
 }
 
-export type EventHandler =
-    | (() => unknown)
-    | ((event: BaseEvent | EventData, ...args: any[]) => unknown);
+export type EventHandler = (event: BaseEvent | EventData, ...args: any[]) => unknown;
+
+export interface HandlerSettings {
+    /** Whether event handler should be called just once. */
+    once?: boolean | null | undefined;
+}
 
 export interface EventEmitter {
     hasEventHandler(type?: string, handler?: EventHandler, context?: object): boolean;
-    on(type: string | string[], handler: EventHandler, context?: object): this;
+    on(type: string | string[], handler: EventHandler, context?: object, settings?: HandlerSettings): this;
     off(type?: string, handler?: EventHandler, context?: object): this;
     emit(type?: string | BaseEvent, ...params: any[]): this;
 }

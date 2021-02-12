@@ -148,7 +148,7 @@ describe('neva', function nevaTestSuite() {
             });
         });
 
-        describe('.on(type, handler, [context])', () => {
+        describe('.on(type, handler, [context], [settings])', () => {
             it('should add specified handler', () => {
                 const obj = getEmitter();
                 const eventType = 'testEvent';
@@ -170,6 +170,24 @@ describe('neva', function nevaTestSuite() {
                     .equal( false );
                 expect( obj.hasEventHandler(eventType, handler, handlerContext) )
                     .equal( true );
+
+                obj.off(eventType, handler, handlerContext);
+
+                expect( obj.hasEventHandler(eventType, eventHandler) )
+                    .equal( true );
+                expect( obj.hasEventHandler(eventType, handler) )
+                    .equal( false );
+                expect( obj.hasEventHandler(eventType, handler, handlerContext) )
+                    .equal( false );
+
+                obj.on(eventType, handler, handlerContext, {once: true});
+
+                expect( obj.hasEventHandler(eventType, eventHandler) )
+                    .equal( true );
+                expect( obj.hasEventHandler(eventType, handler) )
+                    .equal( false );
+                expect( obj.hasEventHandler(eventType, handler, handlerContext) )
+                    .equal( true );
             });
 
             it('should add specified handler for different event types at once', () => {
@@ -180,7 +198,8 @@ describe('neva', function nevaTestSuite() {
                 const handler = () => {};
                 const handlerContext = {};
 
-                obj.on([event1, event2, event3], eventHandler);
+                obj.on([event1, event2], eventHandler);
+                obj.on(event3, eventHandler, null, {});
 
                 expect( obj.hasEventHandler(event1, eventHandler) )
                     .equal( true );
@@ -189,7 +208,8 @@ describe('neva', function nevaTestSuite() {
                 expect( obj.hasEventHandler(event3, eventHandler) )
                     .equal( true );
 
-                obj.on([event1, event2, event3], handler, handlerContext);
+                obj.on([event1, event2], handler, handlerContext);
+                obj.on(event3, handler, handlerContext, {once: true});
 
                 expect( obj.hasEventHandler(event1, eventHandler) )
                     .equal( true );
@@ -215,7 +235,7 @@ describe('neva', function nevaTestSuite() {
 
                 obj.on(eventType, handler)
                     .on(eventType, handler)
-                    .on(eventType, handler)
+                    .on(eventType, handler, null, {once: true})
                     .on(eventType, handler, handlerContext)
                     .on(eventType, handler, handlerContext);
 
@@ -223,6 +243,46 @@ describe('neva', function nevaTestSuite() {
 
                 expect( counter )
                     .equal( 2 );
+            });
+
+            it('should add handler that is called just once', () => {
+                const obj = getEmitter();
+                const eventType = 'increase';
+                const target = {
+                    counter: 0,
+                    handle() {
+                        this.counter++;
+                    }
+                };
+
+                let counter = 0;
+                // eslint-disable-next-line require-jsdoc
+                function handler() {
+                    counter++;
+                }
+
+                let called = 0;
+                // eslint-disable-next-line require-jsdoc
+                function onceHandler() {
+                    called++;
+                }
+
+                obj.on(eventType, target.handle, target, {once: true});
+                obj.on(eventType, handler, null, {once: false});
+                obj.on(eventType, onceHandler, target, {once: true});
+
+                obj.emit(eventType);
+                obj.emit(eventType);
+                obj.emit(eventType);
+                obj.emit(eventType);
+                obj.emit(eventType);
+
+                expect( target.counter )
+                    .equal( 1 );
+                expect( counter )
+                    .equal( 5 );
+                expect( called )
+                    .equal( 1 );
             });
         });
 
@@ -264,7 +324,7 @@ describe('neva', function nevaTestSuite() {
                         .on(type1, handler1, handlerContext1)
                         .on(type1, handler2)
                         .on(type2, handler1)
-                        .on(type2, handler2);
+                        .on(type2, handler2, null, {once: true});
 
                     obj.off(type1);
 
@@ -350,8 +410,15 @@ describe('neva', function nevaTestSuite() {
                     }
                 };
 
+                let called = 0;
+                // eslint-disable-next-line require-jsdoc
+                function oneTimeHandler() {
+                    called++;
+                }
+
                 obj.on(eventType, handler1)
-                    .on(eventType, testObj.handler, testObj);
+                    .on(eventType, testObj.handler, testObj)
+                    .on(eventType, oneTimeHandler, null, {once: true});
 
                 // eslint-disable-next-line require-jsdoc
                 function check(emitParamList, expected) {
@@ -361,6 +428,8 @@ describe('neva', function nevaTestSuite() {
                         .equal( expected.flag );
                     expect( testObj.n )
                         .equal( expected.n );
+                    expect( called )
+                        .equal( 1 );
                 }
 
                 check(

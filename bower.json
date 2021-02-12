@@ -37,7 +37,10 @@
     "dispatcher",
     "delegate",
     "delegation",
-    "custom"
+    "custom",
+    "on",
+    "off",
+    "once"
   ],
   "license": "MIT",
   "ignore": [

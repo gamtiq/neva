@@ -2,7 +2,7 @@
  * neva
  * https://github.com/gamtiq/neva
  *
- * Copyright (c) 2017-2020 Denis Sikuler
+ * Copyright (c) 2017-2021 Denis Sikuler
  * Licensed under the MIT license.
  */
 
@@ -36,9 +36,18 @@ const dataField = '__nevaEventMap';
  */
 
 /**
+ * Event handler settings.
+ *
+ * @typedef {Object} HandlerSettings
+ *
+ * @property {boolean} [once=false]
+ *      Whether event handler should be called just once.
+ */
+
+/**
  * Return index of the specified event handler.
  *
- * @param {EventEmitter} emitter
+ * @param {module:neva~EventEmitter} emitter
  *      Event emitter that should be examined.
  * @param {string} type
  *      Type (name) of event whose handler list should be examined.
@@ -137,6 +146,7 @@ const api = {
      * const emitter = getEmitter();
      * ...
      * emitter
+     *      .on('open', onceHandler, null, {once: true})
      *      .on('occasion', (event) => {
      *          ...
      *      })
@@ -150,10 +160,13 @@ const api = {
      *      Function that should be called in response to specified event.
      * @param {Object} [context]
      *      An object that should be used as `this` when calling the event handler.
-     * @return {EventEmitter}
+     *      By default `null` is used.
+     * @param {module:neva~HandlerSettings} [settings]
+     *      Settings for the event handler.
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
-    on(type, handler, context) {
+    on(type, handler, context, settings) {   // eslint-disable-line max-params
         const eventData = this[dataField] || (this[dataField] = {});
         const typeList = typeof type === 'string'
             ? [type]
@@ -164,7 +177,8 @@ const api = {
             if (! this.hasEventHandler(eventType, handler, context)) {
                 (eventData[eventType] || (eventData[eventType] = [])).push({
                     handler,
-                    obj: context || null
+                    obj: context || null,
+                    settings
                 });
             }
         }
@@ -199,7 +213,7 @@ const api = {
      *      If handler is not passed then all handlers for given type will be removed.
      * @param {Object} [context]
      *      Context object for event handler that should be removed.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
     off(type, handler, context) {
@@ -253,7 +267,7 @@ const api = {
      * @param {...any} [params]
      *      Any values that should be available in handlers.
      *      Will be used only when `type` parameter is string.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
     emit(type, ...params) {
@@ -276,11 +290,21 @@ const api = {
                         data: params[0]
                     };
                 }
+                const removeHandlerList = [];
                 let i = 0;
                 let item;
+                let settings;
                 // eslint-disable-next-line no-cond-assign
                 while (item = eventData[i++]) {
                     item.handler.call(item.obj, eventObj);
+                    if ((settings = item.settings) && settings.once) {
+                        removeHandlerList.push(item);
+                    }
+                }
+                i = removeHandlerList.length;
+                // eslint-disable-next-line no-cond-assign
+                while (item = removeHandlerList[--i]) {
+                    this.off(eventType, item.handler, item.obj);
                 }
             }
         }
@@ -295,7 +319,7 @@ const api = {
  * @param {Object} [target]
  *      Object that should be enhanced by methods to work with events.
  *      If `target` is not passed then new event emitter will be created and returned.
- * @return {EventEmitter}
+ * @return {module:neva~EventEmitter}
  *      Value of `target` parameter or new object that is enhanced by methods to work with events.
  */
 export default function getEmitter(target) {
