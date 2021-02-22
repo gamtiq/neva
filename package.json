@@ -22,6 +22,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
+    "build": "grunt build",
     "test": "grunt test",
     "check": "grunt"
   },

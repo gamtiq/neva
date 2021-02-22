@@ -254,6 +254,12 @@ describe('neva', function nevaTestSuite() {
                         this.counter++;
                     }
                 };
+                const anotherTarget = {
+                    value: 1,
+                    eventHandler() {
+                        this.value *= 2;
+                    }
+                };
 
                 let counter = 0;
                 // eslint-disable-next-line require-jsdoc
@@ -270,6 +276,7 @@ describe('neva', function nevaTestSuite() {
                 obj.on(eventType, target.handle, target, {once: true});
                 obj.on(eventType, handler, null, {once: false});
                 obj.on(eventType, onceHandler, target, {once: true});
+                obj.on(eventType, anotherTarget.eventHandler, anotherTarget);
 
                 obj.emit(eventType);
                 obj.emit(eventType);
@@ -283,6 +290,8 @@ describe('neva', function nevaTestSuite() {
                     .equal( 5 );
                 expect( called )
                     .equal( 1 );
+                expect( anotherTarget.value )
+                    .equal( 32 );
             });
         });
 

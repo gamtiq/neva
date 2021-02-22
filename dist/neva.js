@@ -63,7 +63,7 @@
     /**
      * Return index of the specified event handler.
      *
-     * @param {EventEmitter} emitter
+     * @param {module:neva~EventEmitter} emitter
      *      Event emitter that should be examined.
      * @param {string} type
      *      Type (name) of event whose handler list should be examined.
@@ -195,16 +195,17 @@
                     var item = void 0;
                     var settings = void 0;
                     // eslint-disable-next-line no-cond-assign
-                    while (item = eventData[i++]) {
+                    while (item = eventData[i]) {
                         item.handler.call(item.obj, eventObj);
                         if ((settings = item.settings) && settings.once) {
-                            removeHandlerList.push(item);
+                            removeHandlerList.push(i);
                         }
+                        i++;
                     }
                     i = removeHandlerList.length;
                     // eslint-disable-next-line no-cond-assign
-                    while (item = removeHandlerList[--i]) {
-                        this.off(eventType, item.handler, item.obj);
+                    while (i) {
+                        eventData.splice(removeHandlerList[--i], 1);
                     }
                 }
             }
@@ -219,7 +220,7 @@
      * @param {Object} [target]
      *      Object that should be enhanced by methods to work with events.
      *      If `target` is not passed then new event emitter will be created and returned.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      Value of `target` parameter or new object that is enhanced by methods to work with events.
      */
     function getEmitter(target) {

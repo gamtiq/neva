@@ -295,16 +295,17 @@ const api = {
                 let item;
                 let settings;
                 // eslint-disable-next-line no-cond-assign
-                while (item = eventData[i++]) {
+                while (item = eventData[i]) {
                     item.handler.call(item.obj, eventObj);
                     if ((settings = item.settings) && settings.once) {
-                        removeHandlerList.push(item);
+                        removeHandlerList.push(i);
                     }
+                    i++;
                 }
                 i = removeHandlerList.length;
                 // eslint-disable-next-line no-cond-assign
-                while (item = removeHandlerList[--i]) {
-                    this.off(eventType, item.handler, item.obj);
+                while (i) {
+                    eventData.splice(removeHandlerList[--i], 1);
                 }
             }
         }

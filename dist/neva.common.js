@@ -50,7 +50,7 @@ var dataField = '__nevaEventMap';
 /**
  * Return index of the specified event handler.
  *
- * @param {EventEmitter} emitter
+ * @param {module:neva~EventEmitter} emitter
  *      Event emitter that should be examined.
  * @param {string} type
  *      Type (name) of event whose handler list should be examined.
@@ -150,6 +150,7 @@ var api = {
      * const emitter = getEmitter();
      * ...
      * emitter
+     *      .on('open', onceHandler, null, {once: true})
      *      .on('occasion', (event) => {
      *          ...
      *      })
@@ -164,9 +165,9 @@ var api = {
      * @param {Object} [context]
      *      An object that should be used as `this` when calling the event handler.
      *      By default `null` is used.
-     * @param {HandlerSettings} [settings]
+     * @param {module:neva~HandlerSettings} [settings]
      *      Settings for the event handler.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
     on: function on(type, handler, context, settings) {
@@ -216,7 +217,7 @@ var api = {
      *      If handler is not passed then all handlers for given type will be removed.
      * @param {Object} [context]
      *      Context object for event handler that should be removed.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
     off: function off(type, handler, context) {
@@ -270,7 +271,7 @@ var api = {
      * @param {...any} [params]
      *      Any values that should be available in handlers.
      *      Will be used only when `type` parameter is string.
-     * @return {EventEmitter}
+     * @return {module:neva~EventEmitter}
      *      `this`.
      */
     emit: function emit(type) {
@@ -302,16 +303,17 @@ var api = {
                 var item = void 0;
                 var settings = void 0;
                 // eslint-disable-next-line no-cond-assign
-                while (item = eventData[i++]) {
+                while (item = eventData[i]) {
                     item.handler.call(item.obj, eventObj);
                     if ((settings = item.settings) && settings.once) {
-                        removeHandlerList.push(item);
+                        removeHandlerList.push(i);
                     }
+                    i++;
                 }
                 i = removeHandlerList.length;
                 // eslint-disable-next-line no-cond-assign
-                while (item = removeHandlerList[--i]) {
-                    this.off(eventType, item.handler, item.obj);
+                while (i) {
+                    eventData.splice(removeHandlerList[--i], 1);
                 }
             }
         }
@@ -326,7 +328,7 @@ var api = {
  * @param {Object} [target]
  *      Object that should be enhanced by methods to work with events.
  *      If `target` is not passed then new event emitter will be created and returned.
- * @return {EventEmitter}
+ * @return {module:neva~EventEmitter}
  *      Value of `target` parameter or new object that is enhanced by methods to work with events.
  */
 function getEmitter(target) {
